@@ -1,6 +1,7 @@
 import time
 from flask import Flask, jsonify
-from turing_machine import GR_ANBN, GR_ANBM, GR_A, GR_B, GR_C, GR_D
+from turing_machine import TM_ANBN, TM_ANBNCN, TM_EQUAL, TM_AND, TM_PLUS1
+from turing_machine import accept_tm
 
 app = Flask(__name__)
 
@@ -9,21 +10,23 @@ def get_current_time():
     return {'time': time.time()}
 
 
-@app.route('/grammarNames')
-def get_grammar_names():
-    grammar_data = {
-        'grammarNames': ["GR_ANBN","GR_ANBM","GR_A","GR_B","GR_C","GR_D"],
-        # 'grammarContents': ', '.join([GR_ANBN, GR_ANBM, GR_A, GR_B, GR_C, GR_D])
-        'grammarContents': {
-            "GR_ANBN": GR_ANBN, 
-            "GR_ANBM": GR_ANBM, 
-            "GR_A": GR_A, 
-            "GR_B": GR_B, 
-            "GR_C": GR_C, 
-            "GR_D": GR_D
+@app.route('/tmNames')
+def get_tm_names():
+    tm_data = {
+        'tmNames': ["TM_ANBN", "TM_ANBNCN", "TM_EQUAL", "TM_AND", "TM_PLUS1"],
+        'tmContents': {
+            "TM_ANBN": TM_ANBN, 
+            "TM_ANBNCN": TM_ANBNCN, 
+            "TM_EQUAL": TM_EQUAL, 
+            "TM_AND": TM_AND, 
+            "TM_PLUS1": TM_PLUS1
         }
     }
-    return jsonify(grammar_data)
+    return jsonify(tm_data)
 
 
+@app.route('/runMachine')
+def run_machine():
+    accept_tm(TM_PLUS1, "#0")
+    return {'result': time.time()}
 

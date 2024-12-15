@@ -2,28 +2,28 @@ import React, { useState, useEffect } from 'react';
 import {Radio, RadioGroup, FormControlLabel, FormControl, FormLabel} from '@mui/material';
 
 
-function GrammarSelection({grammarNames, selectedGrammar, setSelectedGrammar}) {
+function TMSelection({tmNames, selectedTM, setSelectedTM}) {
   const handleChange = (e) => {
-    setSelectedGrammar(e.target.value);
+    setSelectedTM(e.target.value);
   };
 
   return (
     <div className="App">
       <header className="App-header">
         <FormControl>
-          <FormLabel id="demo-radio-buttons-group-label">Choose Grammar</FormLabel>
+          <FormLabel id="demo-radio-buttons-group-label">Choose TM</FormLabel>
           <RadioGroup
             aria-labelledby="demo-radio-buttons-group-label"
             // defaultValue="female"
             name="radio-buttons-group"
-            value={selectedGrammar}
+            value={selectedTM}
             onChange={handleChange}
           >
-            {grammarNames.map(grammarName => (
+            {tmNames.map(tmName => (
               <FormControlLabel
-                value={grammarName}
+                value={tmName}
                 control={<Radio />}
-                label={grammarName}
+                label={tmName}
               />
             ))}
           </RadioGroup>
@@ -33,4 +33,4 @@ function GrammarSelection({grammarNames, selectedGrammar, setSelectedGrammar}) {
   );
 }
 
-export default GrammarSelection;
+export default TMSelection;
