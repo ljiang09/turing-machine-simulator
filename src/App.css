@@ -1,27 +1,31 @@
+:root {
+  --primary-color: #B5C7CB;
+  --secondary-color: #6D7983;
+  --background-color: #DADFE1;
+  --custom-black: #333333;
+  --dark-gray: #69686C;
+}
+
+
 .App {
   text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+  background-color: white;
 }
 
 .App-header {
-  background-color: white;
-  /* min-height: 100vh; */
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: #282c34;
+  color: black;
+  height: 200px;
+  background-color: var(--background-color);
+
+  .App-subheader {
+    font-size: calc(10px + 1.2vmin);
+    color: black;
+  }
 }
 
 .App-link {

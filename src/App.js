@@ -35,14 +35,17 @@ function App() {
         {/* TODO: ideally we show the TM string contents */}
         {/* or the format it should be in */}
         {/* tmContents[selectedTM] */}
-        <p>Selected TM: {selectedTM}</p>
-        <TMSelection
-          tmNames={tmNames}
-          selectedTM={selectedTM}
-          setSelectedTM={setSelectedTM}
-        />
-        <StringInput inputStr={inputStr} setInputStr={setInputStr} />
+        <p>Turing Machine Visual Simulator</p>
+        <p className="App-subheader">An Grocki, Lily Jiang</p>
       </header>
+      
+      <p>Select a TM to use</p>
+      <TMSelection
+        tmNames={tmNames}
+        selectedTM={selectedTM}
+        setSelectedTM={setSelectedTM}
+      />
+      <StringInput inputStr={inputStr} setInputStr={setInputStr} />
       <Button
         onClick={runMachine}
       >

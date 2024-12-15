@@ -8,13 +8,12 @@ function TMSelection({tmNames, selectedTM, setSelectedTM}) {
   };
 
   return (
-    <div className="App">
-      <header className="App-header">
+    <div>
+      <header>
         <FormControl>
-          <FormLabel id="demo-radio-buttons-group-label">Choose TM</FormLabel>
+          <FormLabel>Choose TM</FormLabel>
           <RadioGroup
             aria-labelledby="demo-radio-buttons-group-label"
-            // defaultValue="female"
             name="radio-buttons-group"
             value={selectedTM}
             onChange={handleChange}

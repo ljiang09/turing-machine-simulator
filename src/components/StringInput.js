@@ -3,8 +3,8 @@ import {TextField} from '@mui/material';
 function StringInput({inputStr, setInputStr}) {
 
   return (
-    <div className="App">
-      <header className="App-header">
+    <div>
+      <header>
         <TextField
           value={inputStr}
           label="Enter your string"
