@@ -49,13 +49,21 @@ function App() {
         Run Machine
       </Button>
 
-      <div>
-        {outputStr.map((line, index) => (
-          <p key={index}>{line}</p>
-        ))}
+      <div
+        style={{ 
+          display: 'flex', 
+          justifyContent: 'center'
+        }}
+      >
+        <div style={{ textAlign: 'left' }}>
+          {outputStr.map((line, index) => (
+            <p key={index}>{line}</p>
+          ))}
+        </div>
       </div>
+
       <p>
-        {outputRes}
+        {outputRes ? 'True' : 'False'}
       </p>
       
     </div>

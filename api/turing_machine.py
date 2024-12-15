@@ -303,7 +303,8 @@ def print_config(m, c):
     padding = max(0, pos - len(tape))
     tape = tape + (' ' * padding)
     content = "".join(f"[{x}]" if i + 1 == pos else f" {x} " for (i, x) in enumerate(tape))
-    print(f"{(str(state) + ' ' * width)[:width]} {content}")
+    # print(f"{(str(state) + ' ' * width)[:width]} {content}")
+    print(content)
 
 
 #
