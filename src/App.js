@@ -9,7 +9,7 @@ function App() {
   const [tmNames, setTMNames] = useState([]);
   const [tmContents, setTMContents] = useState([]);
   const [inputStr, setInputStr] = useState("");
-  const [outputStr, setOutputStr] = useState("");
+  const [outputStr, setOutputStr] = useState([]);
   const [outputRes, setOutputRes] = useState("");
 
   useEffect(() => {
@@ -24,7 +24,7 @@ function App() {
     const encodedInputStr = encodeURIComponent(inputStr);
     fetch(`/runMachine?tm=${encodedTM}&inputStr=${encodedInputStr}`).then(res => res.json()).then(data => {
       setOutputRes(data.result);
-      setOutputStr(data.steps);
+      setOutputStr(data.steps.split('\n'));
     });
   }
 
@@ -49,14 +49,11 @@ function App() {
         Run Machine
       </Button>
 
-      {/* <div>
+      <div>
         {outputStr.map((line, index) => (
           <p key={index}>{line}</p>
         ))}
-      </div> */}
-      <p>
-        {outputStr}
-      </p>
+      </div>
       <p>
         {outputRes}
       </p>
