@@ -15,14 +15,36 @@ def get_current_time():
 @app.route('/tmNames')
 def get_tm_names():
     tm_data = {
-        'tmNames': ["TM_ANBN", "TM_ANBNCN", "TM_EQUAL", "TM_AND", "TM_PLUS1"],
-        'tmContents': {
-            "TM_ANBN": TM_ANBN, 
-            "TM_ANBNCN": TM_ANBNCN, 
-            "TM_EQUAL": TM_EQUAL, 
-            "TM_AND": TM_AND, 
-            "TM_PLUS1": TM_PLUS1
-        }
+        'tmNames': ["TM_ANBN", "TM_ANBNCN", "TM_EQUAL", "TM_AND", "TM_PLUS1"]
+    }
+    return jsonify(tm_data)
+
+
+@app.route('/tmContent')
+def get_tm_content():
+    tm = request.args.get('tm')
+    tmContent = TM_ANBN
+
+    if tm == "TM_ANBN":
+        tmContent = TM_ANBN
+    elif tm == "TM_ANBNCN":
+        tmContent = TM_ANBNCN
+    elif tm == "TM_EQUAL":
+        tmContent = TM_EQUAL
+    elif tm == "TM_AND":
+        tmContent = TM_AND
+    # elif tm == "TM_PLUS1":
+    else:
+        tmContent = TM_PLUS1
+
+    tm_data = {
+        "states": tmContent["states"],
+        "alphabet": tmContent["alphabet"],
+        "tape_alphabet": tmContent["tape_alphabet"],
+        "start": tmContent["start"],
+        "accept": tmContent["accept"],
+        "reject": tmContent["reject"],
+        "delta": tmContent["delta"]
     }
     return jsonify(tm_data)
 
