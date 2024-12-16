@@ -38,7 +38,7 @@
 }
 
 .Body-header {
-  font-size: calc(10px + 1.2vmin);
+  font-size: calc(10px + 2vmin);
   color: black;
   font-weight: bold;
   padding-top: 20px;
@@ -96,4 +96,20 @@
 
 .three-col-item {
   text-align: start;
+}
+
+.normal {
+  display: inline-block;
+  text-align: center;
+  width: 25px;
+  height: 25px;
+  background-color: var(--background-color);
+}
+
+.bracketed {
+  display: inline-block;
+  text-align: center;
+  width: 25px;
+  height: 25px;
+  background-color: var(--primary-color);
 }
