@@ -47,7 +47,7 @@ function TMSelection({tmNames, selectedTM, setSelectedTM, tmContents}) {
                 :
                   <>
                     <p className='Body-subheader'>{key}</p>
-                    <p>{value}</p>
+                    <p className="three-col-item">{value}</p>
                   </>
                 }
                 
