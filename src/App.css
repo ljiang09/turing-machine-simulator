@@ -41,6 +41,7 @@
   font-size: calc(10px + 1.2vmin);
   color: black;
   font-weight: bold;
+  padding-top: 20px;
 }
 
 .Body-subheader {

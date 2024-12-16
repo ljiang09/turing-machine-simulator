@@ -77,11 +77,10 @@ function App() {
         Run Machine
       </Button>
 
-      <Output outputStr={outputStr} />
-
       {(outputRes !== "") && 
         <>
           <p className="Body-header">Output</p>
+          <Output outputStr={outputStr} />
           <p>
             {outputRes ? 'Result: True' : 'Result: False'}
           </p>
