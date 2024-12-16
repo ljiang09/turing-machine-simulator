@@ -33,8 +33,24 @@ function TMSelection({tmNames, selectedTM, setSelectedTM, tmContents}) {
           <div className="content-column-content">
             {Object.entries(tmContents).map(([key, value]) => (
               <>
-                <p className='Body-subheader'>{key}</p>
-                <p>{value}</p>
+                {key === "delta" ? 
+                  <>
+                    <p className='Body-subheader'>{key}</p>
+                    <div className="three-col-container">
+                      {value.map((item, index) => (
+                        <div key={index} className="three-col-item">
+                          ({item.join(", ")})
+                        </div>
+                      ))}
+                    </div>
+                  </>
+                :
+                  <>
+                    <p className='Body-subheader'>{key}</p>
+                    <p>{value}</p>
+                  </>
+                }
+                
               </>
             ))}
           </div>

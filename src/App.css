@@ -86,3 +86,13 @@
   border-right: 2px solid var(--primary-color);
   min-height: 100px;
 }
+
+.three-col-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.three-col-item {
+  text-align: start;
+}

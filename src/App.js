@@ -33,8 +33,7 @@ function App() {
         "start": data.start,
         "accept": data.accept,
         "reject": data.reject,
-        "delta": "data.delta"
-        // TODO: format this delta output
+        "delta": data.delta
       });
     });
   }
