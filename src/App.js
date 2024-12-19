@@ -9,6 +9,7 @@ function App() {
   const [selectedTM, setSelectedTM] = useState(null);
   const [tmNames, setTMNames] = useState([]);
   const [tmContents, setTMContents] = useState(null);
+  const [tmRepresentation, setTMRepresentation] = useState(null);
   const [inputStr, setInputStr] = useState("");
   const [outputStr, setOutputStr] = useState([]);
   const [outputRes, setOutputRes] = useState("");
@@ -21,6 +22,7 @@ function App() {
 
   useEffect(() => {
     getTMContents();
+    getTMRepresentation();
   }, [selectedTM]);
 
 
@@ -34,6 +36,15 @@ function App() {
         "accept": data.accept,
         "reject": data.reject,
         "delta": data.delta
+      });
+    });
+  }
+
+  const getTMRepresentation = () => {
+    fetch(`/tmRepresentation?tm=${selectedTM}`).then(res => res.json()).then(data => {
+      setTMRepresentation({
+        "tmContent": data.tmContent,
+        "tmExample": data.tmExample
       });
     });
   }
@@ -69,9 +80,10 @@ function App() {
         selectedTM={selectedTM}
         setSelectedTM={setSelectedTM}
         tmContents={tmContents}
+        tmRepresentation={tmRepresentation}
       />
 
-      <p className="Body-header">Step 2: Input a string to parse (can be empty)</p>
+      <p className="Body-header">Step 2: Input a string to parse</p>
       <StringInput inputStr={inputStr} setInputStr={setInputStr} />
       
       <p className="Body-header">Step 3: Run to see the Turing Machine in action</p>

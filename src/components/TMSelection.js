@@ -1,7 +1,8 @@
-import {Radio, RadioGroup, FormControlLabel, FormControl} from '@mui/material';
+import React, { useState } from 'react';
+import {Radio, RadioGroup, FormControlLabel, FormControl, Button} from '@mui/material';
 
 
-function TMSelection({tmNames, selectedTM, setSelectedTM, tmContents}) {
+function TMSelection({tmNames, selectedTM, setSelectedTM, tmContents, tmRepresentation}) {
   const handleChange = (e) => {
     setSelectedTM(e.target.value);
   };
@@ -29,7 +30,7 @@ function TMSelection({tmNames, selectedTM, setSelectedTM, tmContents}) {
       <div class="vl"></div>
 
       <div className="content-column">
-        {(tmContents !== null && selectedTM !== null) && 
+        {/* {(tmContents !== null && selectedTM !== null) && 
           <div className="content-column-content">
             {Object.entries(tmContents).map(([key, value]) => (
               <>
@@ -54,8 +55,19 @@ function TMSelection({tmNames, selectedTM, setSelectedTM, tmContents}) {
               </>
             ))}
           </div>
+        } */}
+        {(tmRepresentation !== null && selectedTM !== null) && 
+          <div className="content-column-content">
+            <p className='Body-subheader'>Content</p>
+            <p className="three-col-item">{tmRepresentation["tmContent"]}</p>
+            <p className='Body-subheader'>Example Strings</p>
+            <p className="three-col-item">{tmRepresentation["tmExample"]}</p>
+            {/* {(tmContents !== null) && 
+              <Button onClick={setOpen(!open)}>{(open === true) ? "See Encoding" : "Hide Encoding"}</Button>
+            } */}
+          </div>
         }
-        {(tmContents === null || selectedTM === null) && 
+        {(tmRepresentation === null || selectedTM === null) && 
           <div className="content-column-content">
             <p>Select a Turing Machine to see its details here.</p>
           </div>
