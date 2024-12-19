@@ -39,12 +39,16 @@ function App() {
   }
 
   const runMachine = () => {
-    const encodedTM = encodeURIComponent(selectedTM);
-    const encodedInputStr = encodeURIComponent(inputStr);
-    fetch(`/runMachine?tm=${encodedTM}&inputStr=${encodedInputStr}`).then(res => res.json()).then(data => {
-      setOutputRes(data.result);
-      setOutputStr(data.steps.split('\n'));
-    });
+    if (selectedTM == null) {
+      setOutputRes("Select a Turing Machine!");
+    } else {
+      const encodedTM = encodeURIComponent(selectedTM);
+      const encodedInputStr = encodeURIComponent(inputStr);
+      fetch(`/runMachine?tm=${encodedTM}&inputStr=${encodedInputStr}`).then(res => res.json()).then(data => {
+        setOutputRes(data.result ? 'Result: True' : 'Result: False');
+        setOutputStr(data.steps.split('\n'));
+      });
+    }
   }
 
 
@@ -82,7 +86,7 @@ function App() {
           <p className="Body-header">Output</p>
           <Output outputStr={outputStr} />
           <p>
-            {outputRes ? 'Result: True' : 'Result: False'}
+            {outputRes}
           </p>
         </>
       }
