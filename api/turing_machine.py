@@ -1,243 +1,5 @@
-
-GR_ANBN = {
-    "nonterminals": ["S"],
-    "alphabet": ["a", "b"],
-    "rules": [
-        ("S", ""),
-        ("S", "aSb")
-    ],
-    "start": "S"
-}
-
-GR_ANBM = {
-    "nonterminals": ["S", "T", "U"],
-    "alphabet": ["a", "b"],
-    "rules": [
-        ("S", "TU"),
-        ("T", ""),
-        ("T", "aTb"),
-        ("U", ""),
-        ("U", "Ub")
-    ],
-    "start": "S"
-}
-
-
-# Try to apply rules to a given string.
-
-def replace(str, pos, lhs, rhs):
-    # Replace lhs with rhs at pos of string.
-    return str[:pos] + rhs + str[pos + len(lhs):]
-
-def apply_rule(str, pos, rs):
-    # Try to apply a rule in rs to str at position pos
-    result = []
-    for (lhs, rhs) in rs:
-        if str[pos:].startswith(lhs):
-            res = replace(str, pos, lhs, rhs)
-            result.append(res)
-    return result
-
-def apply_rules(rs, str):
-    result = []
-    for pos in range(len(str)):
-        res = apply_rule(str, pos, rs)
-        result.extend(res)
-    return result
-
-
-# Remove null rules to simplify generation.
-
-def nullable(g, nonterm):
-    for (lhs, rhs) in g['rules']:
-        if lhs == nonterm:
-            if not rhs:
-                return True
-            for sym in rhs:
-                if sym in g['alphabet']:
-                    continue
-                if sym == lhs:
-                    # Skip in case of recursion.
-                    continue
-                if not nullable(g, sym):
-                    continue
-            return True
-    return False
-
-def remove_nullable(g):
-    large = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    nonterminals = [x for x in g['nonterminals']]
-    def get_next():
-        for t in large:
-            if t not in nonterminals:
-                nonterminals.append(t)
-                return t
-        raise Exception("Ran out of capital letters!")
-    new_start = get_next()
-    rules = g['rules']
-    rules = [r for r in rules if r[1]]
-    new_rules = []
-    for (lhs, rhs) in rules:
-        nullables = [i for (i, s) in enumerate(rhs) if nullable(g, s)]
-        update = [rhs]
-        for i in nullables:
-            new_update = []
-            for c in update:
-                new_update.append(c)
-                new_update.append(replace(c, i, "?", "."))
-            update = new_update
-        new_rules.extend([(lhs, rhs.replace(".", "")) for rhs in update])
-    new_rules.append((new_start, g['start']))
-    if nullable(g, g['start']):
-        new_rules.append((new_start, ""))
-    return {
-        "alphabet": g['alphabet'],
-        "nonterminals": nonterminals,
-        "rules": new_rules,
-        "start": new_start
-    }
-            
-# Perform an iteratively deepening depth-first search of the rewrite tree.
-
-def dfs_path(maxdepth, grammar, target):
-    lt = len(target)
-    q = [([grammar['start']], 0)]
-    seen = set()
-    while q:
-        (path, d) = q[0]
-        ###print(path, d)
-        q = q[1:]
-        if path:
-            str = path[-1]
-            if len(str) == lt and str == target:
-                return path
-            if str in seen:
-                continue
-            if d > maxdepth:
-                seen.add(str)
-                continue
-            new_strs = apply_rules(grammar['rules'], str)
-            ##print(new_strs)
-            new_strs_d = [(path + [x], d + 1) for x in new_strs]
-            ##print(new_strs_d)
-            q = new_strs_d + q
-            seen.add(str)
-        else:
-            raise Exception(f"Problem: empty path in dfs_path?")
-    return []
-
-def idfs_path(maxdepth, grammar, target, verbose=False):
-    for d in range(1, maxdepth):
-        if verbose:
-            print(f"Searching - depth {d}")
-        path = dfs_path(d, grammar, target)
-        ##print(path)
-        if path:
-            return path
-
-# Try to generate a string for a given grammar.
-
-def check_cfg(g):
-    # Check if a grammar is context free.
-    for r in g['rules']:
-        (lhs, rhs) = r
-        if len(lhs) != 1:
-            raise Exception(f"Rule {r} is not context free")
-        for sym in rhs:
-            if sym not in g['alphabet'] and sym not in g['nonterminals']:
-                raise Exception(f"Symbol {sym} not defined")
-    if g['start'] not in g['nonterminals']:
-        raise Exception(f"Start symbol not a nonterminal")
-    
-def generate(grammar, str, maxdepth):
-    check_cfg(grammar)
-    g = remove_nullable(grammar)
-    path = idfs_path(maxdepth, g, str, verbose=True)
-    for (i, p) in enumerate(path or []):
-        print(f"{'->' if i else ''} {p}")
-    return bool(path)
-
-# custom generator to quickly check working/failing strings
-def generate_custom(grammar, str, maxdepth):
-    check_cfg(grammar)
-    g = remove_nullable(grammar)
-    path = idfs_path(maxdepth, g, str)
-    return bool(path)
-
-
-
-#
-# QUESTION 1
-#
-
-# generates the set of all strings of a's followed by b's followed by c's,
-# where there are as many b's as a's and c's combined
-GR_A = {
-    "nonterminals": ["S", "T", "U"],
-    "alphabet": ["a", "b", "c"],
-    "rules": [
-        ("S", ""),
-        ("S", "TU"),
-        ("T", ""),
-        ("T", "aTb"),
-        ("U", ""),
-        ("U", "bUc")
-    ],
-    "start": "S"
-}
-
-# the set of all strings made up of as followed by bs followed by cs,
-# where there are as many cs as as and bs combined
-GR_B = {
-    "nonterminals": ["S", "T", "U"],
-    "alphabet": ["a", "b", "c"],
-    "rules": [
-        ("S", ""),
-        ("S", "T"),
-        ("S", "U"),
-        ("T", ""),
-        ("T", "aTc"),
-        ("T", "aUc"),
-        ("U", ""),
-        ("U", "bUc")
-    ],
-    "start": "S"
-}
-
-# all strings over {a,b} that have the same number of as and bs
-GR_C = {
-    "nonterminals": ["S"],
-    "alphabet": ["a", "b"],
-    "rules": [ 
-        ("S", ""),
-        ("S", "Sab"),
-        ("S", "abS"),
-        ("S", "aSb"),
-        ("S", "Sba"),
-        ("S", "baS"),
-        ("S", "bSa")
-    ],
-    "start": "S"
-}
-
-# the language of all strings representing unary addition
-GR_D = {
-    "nonterminals": ["S", "T"],
-    "alphabet": ["1", "+", "="],
-    "rules": [
-        ("S", "1S1"),
-        ("S", "1+T1"),
-        ("T", "1=1"),
-        ("T", "1T1")
-    ],
-    "start": "S"
-}
-
-
-
-# Sample Turing machines.
-
-
+# Takes in strings over the alphabet {a, b}.
+# Determines if there are an equal number of a's and b's, where all a's come before any b's.
 TM_ANBN = {
     "states": [1, 2, 4, 6, 7, 777, 666],
     "alphabet": ['a','b'],
@@ -305,14 +67,6 @@ def print_config(m, c):
     content = "".join(f"[{x}]" if i + 1 == pos else f" {x} " for (i, x) in enumerate(tape))
     # print(f"{(str(state) + ' ' * width)[:width]} {content}")
     print(content)
-
-
-#
-# QUESTION 2
-#
-# q is a state of the Turing machine
-# tape is a string representing the content of the tape
-# pos is a number ≥ 1 representing the position of the tape head. (The leftmost cell of the tape is at position 1)
 
 
 # Finds the starting configuration for a Turing Machine
@@ -410,10 +164,8 @@ def accept_tm(m, input):
 
 
 
-#
-# QUESTION 3
-#
-
+# Takes in strings over the alphabet {a, b}.
+# Determines if there are an equal number of a's and b's, but in any order.
 TM_EQUAL = {
     "states": [1, 2, 3, 4, 5, 6, 7, 8, 9, 777, 666],
     "alphabet": ['a', 'b'],
@@ -478,6 +230,8 @@ TM_EQUAL = {
 }
 
 
+# Takes in strings over the alphabet {0, 1, #} of the form #u#v#w, where u, v, and w are binary strings.
+# Determines if w is equal to the pointwise AND of u and v.
 TM_AND = {
     "states": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 777, 666],
     "alphabet": ['0', '1', '#'],
@@ -568,8 +322,8 @@ TM_AND = {
 }
 
 
-# note: there are only 19 states without the accept/reject but i skipped state 11 bc in my diagram i
-# skipped it on accident and it was easier to follow while maintaining the numbers
+# Takes in strings over the alphabet {0, 1, #} of the form #u#v, where u and v are binary strings of the same length.
+# Determines if u + 1 = v when viewed as binary numbers.
 TM_PLUS1 = {
     "states": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13, 14, 15, 16, 17, 18, 19, 20, 777, 666],
     "alphabet": ['0', '1', '#'],
@@ -680,19 +434,3 @@ TM_PLUS1 = {
         (19, '0', 666, 'X', -1),
     ]
 }
-
-# print(accept_tm(TM_PLUS1, "#0#1"))
-# print(accept_tm(TM_PLUS1, "#00#01"))
-# print(accept_tm(TM_PLUS1, "#000#001"))
-# print(accept_tm(TM_PLUS1, "#010#011"))
-# print(accept_tm(TM_PLUS1, "#011#100"))
-# print(accept_tm(TM_PLUS1, "#100#101"))
-# print(accept_tm(TM_PLUS1, "#101#110"))
-# print(accept_tm(TM_PLUS1, "#110#111"))
-# print(accept_tm(TM_PLUS1, "#101010#101011"))
-# print(accept_tm(TM_PLUS1, "#101111#110000"))
-
-
-print(accept_tm(TM_PLUS1, "#0"))
-print(accept_tm(TM_PLUS1, "#0#1#1"))
-print(accept_tm(TM_PLUS1, "#0#11"))
