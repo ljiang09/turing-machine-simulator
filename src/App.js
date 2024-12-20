@@ -13,6 +13,7 @@ function App() {
   const [inputStr, setInputStr] = useState("");
   const [outputStr, setOutputStr] = useState([]);
   const [outputRes, setOutputRes] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetch('/tmNames').then(res => res.json()).then(data => {
@@ -55,9 +56,11 @@ function App() {
     } else {
       const encodedTM = encodeURIComponent(selectedTM);
       const encodedInputStr = encodeURIComponent(inputStr);
+      setLoading(true);
       fetch(`/runMachine?tm=${encodedTM}&inputStr=${encodedInputStr}`).then(res => res.json()).then(data => {
         setOutputRes(data.result ? 'Result: True' : 'Result: False');
         setOutputStr(data.steps.split('\n'));
+        setLoading(false);
       });
     }
   }
@@ -87,11 +90,16 @@ function App() {
       <StringInput inputStr={inputStr} setInputStr={setInputStr} />
       
       <p className="Body-header">Step 3: Run to see the Turing Machine in action</p>
-      <Button
-        onClick={runMachine}
-      >
-        Run Machine
-      </Button>
+      {loading ?
+        <p style={{padding: "15px"}}>
+          LOADING...
+        </p>
+        :
+        <Button onClick={runMachine}>
+          Run Machine
+        </Button>
+      }
+      
 
       {(outputRes !== "") && 
         <>
