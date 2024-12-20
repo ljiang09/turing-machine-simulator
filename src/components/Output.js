@@ -25,9 +25,10 @@ function Output({outputStr}) {
     });
   };
 
-  var parsedString = parseString(outputStr);
+  var parsedString = parseString(outputStr).slice(0, -1);  // remove last element since the python function prints out a blank line
   const maxLength = Math.max(...parsedString.map(arr => arr.length));
 
+  // pad smaller subarrays so the output HTML isn't jagged
   parsedString = parsedString.map(arr => {
     const padding = Array(maxLength - arr.length).fill(null).map((_, index) => (
       <span key={`padding-${index}`} className="blank">{' '}</span>
@@ -38,6 +39,7 @@ function Output({outputStr}) {
   const [displayType, setDisplayType] = useState(true);
   const [frame, setFrame] = useState(0);
 
+  // for the animated output, change the frame every second
   useEffect(() => {
     if (displayType === false) {
       const interval = setInterval(() => {
@@ -71,13 +73,14 @@ function Output({outputStr}) {
         onChange={() => setDisplayType(!displayType)}
         style={{paddingBottom: "20px"}}
       >
-        <ToggleButton value={true} style={{ height: "50px", textTransform: "none" }}>
+        <ToggleButton value={true} style={{ height: "40px", textTransform: "none" }}>
           <p>Animated</p>
         </ToggleButton>
-        <ToggleButton value={false} style={{ height: "50px", textTransform: "none" }}>
+        <ToggleButton value={false} style={{ height: "40px", textTransform: "none" }}>
           <p>Step-by-step</p>
         </ToggleButton>
       </ToggleButtonGroup>
+
       {displayType ? 
         <div style={{ textAlign: 'left', display: 'flex', flexDirection: "column", gap: "3px" }}>
           {parsedString.map((line, idx) => (

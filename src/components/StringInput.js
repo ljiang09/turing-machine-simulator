@@ -1,7 +1,7 @@
 import {TextField} from '@mui/material';
 
+// Component that takes in user string input
 function StringInput({inputStr, setInputStr}) {
-
   return (
     <div>
       <header>
