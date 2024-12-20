@@ -26,6 +26,15 @@ function Output({outputStr}) {
   };
 
   var parsedString = parseString(outputStr);
+  const maxLength = Math.max(...parsedString.map(arr => arr.length));
+
+  parsedString = parsedString.map(arr => {
+    const padding = Array(maxLength - arr.length).fill(null).map((_, index) => (
+      <span key={`padding-${index}`} className="blank">{' '}</span>
+    ));
+    return arr.concat(padding);
+  });
+
   const [displayType, setDisplayType] = useState(true);
   const [frame, setFrame] = useState(0);
 
@@ -73,7 +82,10 @@ function Output({outputStr}) {
         <div style={{ textAlign: 'left', display: 'flex', flexDirection: "column", gap: "3px" }}>
           {parsedString.map((line, idx) => (
             <div key={idx} style={{display: 'flex', gap: "1px"}}>
-              {/* {idx} */} {line}
+              <div key={idx} style={{width: "30px"}}>
+                {idx}
+              </div>
+              {line}
             </div>
           ))}
         </div>
@@ -86,7 +98,7 @@ function Output({outputStr}) {
             gap: "3px"
           }}
         >
-          <div>{frame}</div>
+          <div>Step {frame}</div>
           <div
             style={{
               display: 'flex',

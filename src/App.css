@@ -113,3 +113,11 @@
   height: 25px;
   background-color: var(--primary-color);
 }
+
+.blank {
+  display: inline-block;
+  text-align: center;
+  width: 25px;
+  height: 25px;
+  background-color: white;
+}
